@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Zakat Fitrah</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #1A7A6E;
+    --teal-light: #2AA090;
+    --teal-pale: #E8F5F3;
+    --teal-dim: #0D5549;
+    --cream: #FDF8F0;
+    --cream-2: #F5EFE3;
+    --cream-3: #EDE4D2;
+    --sand: #C9A96E;
+    --sand-light: #E4C98A;
+    --brown: #7A5C38;
+    --text-dark: #1E2B28;
+    --text-mid: #4A6360;
+    --text-light: #8AA8A3;
+    --white: #FFFFFF;
+    --green-ok: #2D9E6B;
+    --red-err: #C95050;
+    --shadow: 0 4px 24px rgba(26,122,110,0.12);
+    --shadow-lg: 0 12px 48px rgba(26,122,110,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--text-dark);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Decorative background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 420px;
+    background: linear-gradient(160deg, var(--teal-dim) 0%, var(--teal) 50%, var(--teal-light) 100%);
+    z-index: 0;
+  }
+
+  /* Arch pattern on top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 300px; left: 0; right: 0;
+    height: 120px;
+    background: var(--cream);
+    border-radius: 60% 60% 0 0 / 100% 100% 0 0;
+    z-index: 0;
+  }
+
+  /* Geometric ornament */
+  .ornament {
+    position: fixed;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 60px solid rgba(255,255,255,0.05);
+    z-index: 0;
+  }
+
+  .ornament-2 {
+    position: fixed;
+    top: 60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 40px solid rgba(255,255,255,0.04);
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 44px 20px 20px;
+    color: white;
+  }
+
+  .zakat-icon {
+    width: 70px; height: 70px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 18px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .header-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .header h1 {
+    font-family: 'Amiri', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: white;
+  }
+
+  .header .subtitle {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .creator-name {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  /* Main card */
+  .main-card {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    margin-top: 32px;
+  }
+
+  /* Start screen */
+  .start-screen {
+    padding: 40px 36px;
+    text-align: center;
+  }
+
+  .arabic-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.6rem;
+    color: var(--teal);
+    direction: rtl;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .start-desc {
+    color: var(--text-mid);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .stat-item {
+    flex: 1;
+    background: var(--teal-pale);
+    border-radius: 14px;
+    padding: 18px 10px;
+    border: 1.5px solid rgba(26,122,110,0.12);
+  }
+
+  .stat-item .s-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--teal);
+    font-family: 'Amiri', serif;
+    display: block;
+  }
+
+  .stat-item .s-lbl {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, var(--teal-dim), var(--teal-light));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(26,122,110,0.35);
+  }
+
+  .start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(26,122,110,0.45);
+  }
+
+  /* Quiz area */
+  .quiz-area { display: none; }
+  .quiz-area.show { display: block; }
+  .start-screen.hidden { display: none; }
+
+  /* Progress header */
+  .quiz-header {
+    padding: 20px 28px 0;
+  }
+
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .q-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .score-pill {
+    background: var(--teal-pale);
+    border: 1.5px solid rgba(26,122,110,0.2);
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--teal-dim);
+  }
+
+  .prog-track {
+    background: var(--cream-3);
+    border-radius: 99px;
+    height: 7px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* Question body */
+  .question-body {
+    padding: 24px 28px 28px;
+  }
+
+  .q-number-badge {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-bottom: 14px;
+    letter-spacing: 0.08em;
+  }
+
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+    white-space: pre-line;
+  }
+
+  .q-arabic {
+    font-family: 'Amiri', serif;
+    font-size: 1.3rem;
+    color: var(--teal-dim);
+    direction: rtl;
+    text-align: center;
+    display: block;
+    margin: 8px 0 6px;
+    line-height: 2;
+    background: var(--teal-pale);
+    border-radius: 10px;
+    padding: 10px 16px;
+    border-left: 3px solid var(--teal);
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .opt-btn {
+    background: var(--cream);
+    border: 2px solid var(--cream-3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-dark);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--teal-light);
+    background: var(--teal-pale);
+    transform: translateX(4px);
+  }
+
+  .opt-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .opt-btn.correct {
+    border-color: var(--green-ok);
+    background: #EAF7F1;
+  }
+  .opt-btn.correct .opt-letter {
+    background: var(--green-ok);
+    border-color: var(--green-ok);
+    color: white;
+  }
+
+  .opt-btn.wrong {
+    border-color: var(--red-err);
+    background: #FAEAEA;
+  }
+  .opt-btn.wrong .opt-letter {
+    background: var(--red-err);
+    border-color: var(--red-err);
+    color: white;
+  }
+
+  .opt-btn:disabled { cursor: default; }
+
+  /* Feedback */
+  .feedback-box {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback-box.show { display: block; }
+  .feedback-box.ok { background: #EAF7F1; color: #1A6642; border: 1.5px solid rgba(45,158,107,0.25); }
+  .feedback-box.err { background: #FAEAEA; color: #8B2020; border: 1.5px solid rgba(201,80,80,0.25); }
+
+  /* Next button */
+  .next-btn {
+    display: none;
+    width: calc(100% - 56px);
+    margin: 0 28px 28px;
+    padding: 15px;
+    background: var(--teal);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.04em;
+  }
+
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,122,110,0.3); }
+
+  /* Result screen */
+  .result-screen {
+    display: none;
+    padding: 44px 36px;
+    text-align: center;
+    animation: fadeUp 0.5s ease;
+  }
+
+  .result-screen.show { display: block; }
+
+  .trophy-wrap {
+    position: relative;
+    width: 100px; height: 100px;
+    margin: 0 auto 24px;
+  }
+
+  .trophy-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--teal) var(--pct, 0%), var(--cream-3) 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trophy-inner {
+    width: 80px; height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trophy-num {
+    font-family: 'Amiri', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+  }
+
+  .trophy-max {
+    font-size: 0.65rem;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  .result-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.7rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+
+  .result-msg {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto 28px;
+  }
+
+  .result-stats {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .rs-box {
+    flex: 1;
+    max-width: 120px;
+    background: var(--cream);
+    border: 1.5px solid var(--cream-3);
+    border-radius: 14px;
+    padding: 14px 10px;
+  }
+
+  .rs-num { font-family: 'Amiri', serif; font-size: 1.7rem; font-weight: 700; display: block; }
+  .rs-num.g { color: var(--green-ok); }
+  .rs-num.r { color: var(--red-err); }
+  .rs-num.t { color: var(--teal); }
+  .rs-lbl { font-size: 0.7rem; color: var(--text-light); font-weight: 500; margin-top: 4px; display: block; }
+
+  .restart-btn {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 2px solid var(--teal);
+    border-radius: 14px;
+    color: var(--teal);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.04em;
+  }
+
+  .restart-btn:hover {
+    background: var(--teal);
+    color: white;
+    box-shadow: 0 6px 20px rgba(26,122,110,0.3);
+  }
+
+  /* Sliding card animation */
+  .question-body { animation: fadeUp 0.35s ease; }
+
+  @media (max-width: 500px) {
+    .header h1 { font-size: 1.55rem; }
+    .start-screen, .result-screen { padding: 28px 22px; }
+    .question-body { padding: 20px 20px 24px; }
+    .quiz-header { padding: 18px 20px 0; }
+    .next-btn { width: calc(100% - 40px); margin: 0 20px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="ornament"></div>
+<div class="ornament-2"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="zakat-icon">🌙</div>
+    <div class="header-tag">Ibadah Ramadhan</div>
+    <h1>Kuis: Zakat Fitrah</h1>
+    <p class="subtitle">Penyempurna Ibadah Puasa Ramadhan</p>
+    <p class="creator-name">Created By : Gerry Lanang Yufrantono, S.Pd.</p>
+  </div>
+
+  <div class="main-card">
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+      <span class="arabic-title">زَكَاةُ الْفِطْرِ</span>
+      <p class="start-desc">Uji pemahamanmu tentang zakat fitrah — kewajiban setiap muslim sebagai penyempurna ibadah puasa Ramadhan.</p>
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="s-val">15</span>
+          <span class="s-lbl">Soal</span>
+        </div>
+        <div class="stat-item">
+          <span class="s-val">10</span>
+          <span class="s-lbl">Poin/Soal</span>
+        </div>
+        <div class="stat-item">
+          <span class="s-val">150</span>
+          <span class="s-lbl">Total Poin</span>
+        </div>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">Mulai Kuis →</button>
+    </div>
+
+    <!-- Quiz Area -->
+    <div class="quiz-area" id="quizArea">
+      <div class="quiz-header">
+        <div class="progress-row">
+          <span class="q-label" id="qLabel">Soal 1 / 15</span>
+          <span class="score-pill">⭐ <span id="scoreDisp">0</span> poin</span>
+        </div>
+        <div class="prog-track">
+          <div class="prog-fill" id="progFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="question-body" id="questionBody">
+        <span class="q-number-badge" id="qBadge">SOAL 1</span>
+        <div class="q-text" id="qText"></div>
+        <div class="options" id="optGrid"></div>
+        <div class="feedback-box" id="feedbackBox"></div>
+      </div>
+
+      <button class="next-btn" id="nextBtn" onclick="nextQ()">Soal Berikutnya →</button>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="result-screen" id="resultScreen">
+      <div class="trophy-wrap">
+        <div class="trophy-ring" id="trophyRing">
+          <div class="trophy-inner">
+            <span class="trophy-num" id="finalScore">0</span>
+            <span class="trophy-max">dari 150</span>
+          </div>
+        </div>
+      </div>
+      <h2 class="result-title" id="resultTitle">Alhamdulillah!</h2>
+      <p class="result-msg" id="resultMsg"></p>
+      <div class="result-stats">
+        <div class="rs-box">
+          <span class="rs-num g" id="rCorrect">0</span>
+          <span class="rs-lbl">✓ Benar</span>
+        </div>
+        <div class="rs-box">
+          <span class="rs-num r" id="rWrong">0</span>
+          <span class="rs-lbl">✗ Salah</span>
+        </div>
+        <div class="rs-box">
+          <span class="rs-num t" id="rPct">0%</span>
+          <span class="rs-lbl">Nilai</span>
+        </div>
+      </div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Apa pengertian zakat fitrah?",
+    opts: ["Zakat yang dikeluarkan dari penghasilan bulanan", "Zakat wajib yang dikeluarkan setiap muslim pada akhir Ramadhan sebelum shalat Idul Fitri", "Zakat atas kepemilikan harta yang mencapai nisab", "Sedekah sunnah di bulan Ramadhan"],
+    ans: 1,
+    exp: "Benar! Zakat fitrah adalah zakat wajib yang dikeluarkan setiap muslim pada akhir bulan Ramadhan sebelum pelaksanaan shalat Idul Fitri."
+  },
+  {
+    q: "Mengapa zakat ini disebut 'fitrah'?",
+    opts: ["Karena diturunkan saat Nabi berpuasa pertama kali", "Karena berkaitan dengan kesucian diri dan penyucian jiwa setelah ibadah puasa", "Karena hanya berlaku di bulan Fitri", "Karena jumlahnya sesuai fitrah manusia"],
+    ans: 1,
+    exp: "Benar! Disebut 'fitrah' karena berkaitan dengan kesucian dan penyucian jiwa setelah menjalankan ibadah puasa Ramadhan."
+  },
+  {
+    q: "Berdasarkan hadits Ibnu Umar, Rasulullah ﷺ mewajibkan zakat fitrah sebesar satu sha' dari...",
+    opts: ["Beras atau jagung", "Kurma atau gandum", "Uang atau emas", "Daging atau ikan"],
+    ans: 1,
+    exp: "Benar! Hadits Ibnu Umar menyebutkan: 'Rasulullah ﷺ mewajibkan zakat fitrah satu sha' kurma atau satu sha' gandum.' (HR. Bukhari & Muslim)"
+  },
+  {
+    q: "Manakah yang BUKAN termasuk tujuan zakat fitrah?",
+    opts: ["Mensucikan orang yang berpuasa dari perkataan sia-sia", "Memberi makan kepada fakir miskin", "Memperbanyak amalan sunnah Ramadhan", "Menyempurnakan ibadah Ramadhan"],
+    ans: 2,
+    exp: "Benar! Tujuan zakat fitrah adalah: mensucikan yang berpuasa, memberi makan fakir miskin, dan menyempurnakan ibadah Ramadhan. Memperbanyak amalan sunnah bukan tujuan spesifik zakat fitrah."
+  },
+  {
+    q: "Siapa sajakah yang wajib membayar zakat fitrah?",
+    opts: ["Hanya laki-laki dewasa yang bekerja", "Hanya kepala keluarga saja", "Setiap muslim, baik laki-laki maupun perempuan, kecil maupun dewasa", "Hanya orang yang mampu secara finansial saja"],
+    ans: 2,
+    exp: "Benar! Zakat fitrah wajib atas setiap muslim — laki-laki maupun perempuan, anak kecil maupun dewasa — selama memiliki kelebihan makanan pada malam Idul Fitri."
+  },
+  {
+    q: "Siapa yang bertanggung jawab membayarkan zakat fitrah untuk seluruh anggota keluarganya?",
+    opts: ["Ibu sebagai pengurus rumah tangga", "Kepala keluarga", "Anak tertua yang sudah bekerja", "Masing-masing anggota keluarga sendiri"],
+    ans: 1,
+    exp: "Benar! Kepala keluarga wajib membayarkan zakat fitrah untuk seluruh anggota keluarga yang menjadi tanggungannya."
+  },
+  {
+    q: "Berapa besaran zakat fitrah yang harus dikeluarkan per jiwa?",
+    opts: ["0,5 sha' (±1,25 kg)", "1 sha' (±2,5–3 kg) makanan pokok", "2 sha' (±5 kg) makanan pokok", "3 sha' (±7,5 kg) makanan pokok"],
+    ans: 1,
+    exp: "Benar! Besaran zakat fitrah adalah 1 sha' yang setara dengan ±2,5 hingga 3 kg makanan pokok (seperti beras di Indonesia)."
+  },
+  {
+    q: "Bolehkah zakat fitrah diganti dengan uang tunai?",
+    opts: ["Tidak boleh sama sekali, harus berupa bahan makanan", "Boleh menurut sebagian ulama, senilai harga makanan pokok", "Wajib diganti uang agar lebih praktis", "Hanya boleh di kota besar saja"],
+    ans: 1,
+    exp: "Benar! Menurut sebagian ulama (seperti Imam Abu Hanifah), zakat fitrah boleh diganti dengan uang senilai makanan pokok. Namun ulama lain mengutamakan pembayaran dalam bentuk bahan makanan."
+  },
+  {
+    q: "Kapan waktu TERBAIK untuk membayar zakat fitrah?",
+    opts: ["Sejak awal Ramadhan agar lebih afdhal", "Sebelum shalat Idul Fitri dilaksanakan", "Pada malam takbiran setelah Isya", "Setelah shalat Idul Fitri selesai"],
+    ans: 1,
+    exp: "Benar! Waktu terbaik membayar zakat fitrah adalah sebelum shalat Idul Fitri dilaksanakan. Ini adalah waktu wajibnya."
+  },
+  {
+    q: "Apa yang terjadi jika zakat fitrah dibayarkan setelah shalat Idul Fitri selesai?",
+    opts: ["Tetap sah dan diterima sebagai zakat fitrah", "Dihitung sebagai zakat mal saja", "Hanya dihitung sebagai sedekah biasa, bukan zakat fitrah", "Tidak diterima sama sekali"],
+    ans: 2,
+    exp: "Benar! Berdasarkan hadits Nabi ﷺ, jika dibayarkan setelah shalat Idul Fitri maka hanya dihitung sebagai sedekah biasa, bukan zakat fitrah."
+  },
+  {
+    q: "Kepada siapa zakat fitrah diprioritaskan untuk diberikan?",
+    opts: ["Panitia masjid dan pengurus zakat", "Fakir dan miskin", "Muallaf dan ibnu sabil saja", "Amil zakat yang bertugas"],
+    ans: 1,
+    exp: "Benar! Zakat fitrah diprioritaskan untuk fakir dan miskin agar mereka dapat merasakan kebahagiaan di hari raya. Secara umum termasuk dalam 8 golongan penerima zakat (QS. At-Taubah: 60)."
+  },
+  {
+    q: "Berapa golongan penerima zakat yang disebutkan dalam QS. At-Taubah: 60?",
+    opts: ["5 golongan", "6 golongan", "7 golongan", "8 golongan"],
+    ans: 3,
+    exp: "Benar! QS. At-Taubah: 60 menyebutkan 8 golongan penerima zakat: fakir, miskin, amil, muallaf, riqab (budak), gharim (orang berutang), fi sabilillah, dan ibnu sabil."
+  },
+  {
+    q: "Manakah yang merupakan hikmah zakat fitrah?",
+    opts: ["Meningkatkan kekayaan orang yang membayar", "Menguatkan ukhuwah Islamiyah dan membahagiakan kaum dhuafa", "Membangun masjid dan fasilitas umum", "Mengurangi jumlah pajak yang harus dibayar"],
+    ans: 1,
+    exp: "Benar! Di antara hikmah zakat fitrah adalah menguatkan ukhuwah (persaudaraan) Islamiyah dan membahagiakan kaum dhuafa di hari raya Idul Fitri."
+  },
+  {
+    q: "Apa perbedaan utama antara Zakat Fitrah dan Zakat Mal?",
+    opts: ["Zakat fitrah hanya untuk orang kaya, zakat mal untuk semua", "Zakat fitrah wajib setiap Ramadhan dengan ukuran tetap; zakat mal berdasarkan harta yang mencapai nisab", "Zakat fitrah dibayar dengan emas, zakat mal dengan beras", "Keduanya sama saja, hanya berbeda namanya"],
+    ans: 1,
+    exp: "Benar! Zakat Fitrah: wajib setiap Ramadhan, ukurannya tetap (1 sha'). Zakat Mal: berdasarkan kepemilikan jenis harta tertentu yang telah mencapai nisab dan haul."
+  },
+  {
+    q: "Apa kesimpulan penting tentang zakat fitrah?",
+    opts: ["Boleh ditunda hingga bulan Syawal jika belum sempat", "Zakat fitrah adalah kewajiban yang menyempurnakan puasa dan tidak boleh ditunda hingga melewati waktu shalat Id", "Zakat fitrah hukumnya sunnah bagi yang mampu", "Zakat fitrah bisa digabung dengan zakat tahun depan"],
+    ans: 1,
+    exp: "Benar! Zakat fitrah adalah kewajiban yang menyempurnakan ibadah puasa Ramadhan. Jangan menunda pembayarannya hingga melewati waktu shalat Idul Fitri agar tetap bernilai sebagai zakat."
+  }
+];
+
+let cur = 0, score = 0, corr = 0, wrng = 0, answered = false;
+
+function startQuiz() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizArea').classList.add('show');
+  loadQ();
+}
+
+function loadQ() {
+  answered = false;
+  const q = questions[cur];
+  document.getElementById('qLabel').textContent = `Soal ${cur+1} / ${questions.length}`;
+  document.getElementById('qBadge').textContent = `SOAL ${cur+1}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progFill').style.width = `${(cur/questions.length)*100}%`;
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('feedbackBox').innerHTML = '';
+  document.getElementById('nextBtn').className = 'next-btn';
+
+  // Re-animate
+  const body = document.getElementById('questionBody');
+  body.style.animation = 'none';
+  body.offsetHeight;
+  body.style.animation = 'fadeUp 0.35s ease';
+
+  const grid = document.getElementById('optGrid');
+  grid.innerHTML = '';
+  ['A','B','C','D'].forEach((l, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${l}</span><span>${q.opts[i]}</span>`;
+    btn.onclick = () => pick(i, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function pick(idx, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[cur];
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedbackBox');
+  if (idx === q.ans) {
+    btn.classList.add('correct');
+    score += 10; corr++;
+    document.getElementById('scoreDisp').textContent = score;
+    fb.className = 'feedback-box ok show';
+    fb.innerHTML = '✅ ' + q.exp;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+    wrng++;
+    fb.className = 'feedback-box err show';
+    fb.innerHTML = '❌ Kurang tepat. ' + q.exp;
+  }
+  document.getElementById('nextBtn').className = 'next-btn show';
+}
+
+function nextQ() {
+  cur++;
+  if (cur >= questions.length) showResult();
+  else loadQ();
+}
+
+function showResult() {
+  document.getElementById('quizArea').classList.remove('show');
+  const rs = document.getElementById('resultScreen');
+  rs.classList.add('show');
+
+  const pct = Math.round((corr / questions.length) * 100);
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('rCorrect').textContent = corr;
+  document.getElementById('rWrong').textContent = wrng;
+  document.getElementById('rPct').textContent = pct + '%';
+  document.getElementById('progFill').style.width = '100%';
+
+  // Animate trophy ring
+  document.getElementById('trophyRing').style.setProperty('--pct', pct + '%');
+
+  let title, msg;
+  if (pct === 100) {
+    title = "Masyaa Allah! Sempurna! 🏆";
+    msg = "Luar biasa! Nilai sempurna! Pengetahuanmu tentang Zakat Fitrah sangat mendalam. Semoga ilmu ini menjadi amal jariyah dan berkah di dunia akhirat.";
+  } else if (pct >= 80) {
+    title = "Alhamdulillah! Sangat Baik 🌟";
+    msg = "Pemahamanmu tentang Zakat Fitrah sangat baik! Pelajari kembali beberapa soal yang belum tepat untuk menyempurnakan pengetahuanmu.";
+  } else if (pct >= 60) {
+    title = "Cukup Baik, Tingkatkan! 📚";
+    msg = "Kamu sudah memahami sebagian materi. Pelajari kembali tentang waktu pembayaran, besaran, dan penerima zakat fitrah agar lebih sempurna.";
+  } else {
+    title = "Semangat Belajar! 💪";
+    msg = "Jangan menyerah! Pelajari kembali materi Zakat Fitrah dari awal. Setiap ilmu yang kamu pelajari adalah ibadah. Coba lagi dan raih hasil terbaik!";
+  }
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+}
+
+function restartQuiz() {
+  cur = 0; score = 0; corr = 0; wrng = 0; answered = false;
+  document.getElementById('scoreDisp').textContent = 0;
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('quizArea').classList.add('show');
+  loadQ();
+}
+</script>
+</body>
+</html>
